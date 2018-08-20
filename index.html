@@ -4,9 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>ivanmoto254</title>
+  <link rel="stylesheet" href="style.css">
+  <title>Сложение простых чисел vanillajs</title>
 </head>
 <body>
-  <h1>ivanmoto254</h1>
+  <div class="app">
+
+    <div class="header">
+      <h2>Сложение простых чисел</h2>
+    </div>
+
+    <div class="view">
+
+      <div class="congrats">
+        <h3 id="congrats">Правильно!</h3>
+      </div>
+
+      <div class="sum">
+        <span id="sumleft">5</span>
+        <span>+</span>
+        <span id="sumright">5</span>
+        <span>=</span>
+        <span id="sumquestion">?</span>
+        <input id="suminput" type="number">
+      </div>
+
+      <div id="playground">
+
+        <div id="left">
+
+          <div class="leftresult">
+            <span id="leftnumber">8</span>
+            <input id="leftinput" type="nubmer">
+          </div>
+
+          <div id="leftarc" style="border: 1px solid green"></div>
+
+        </div>
+
+        <div id="right">
+
+          <div class="rightresult">
+            <span id="rightnumber">8</span>
+            <input id="rightinput" type="nubmer">
+          </div>
+
+          <div id="rightarc" style="border: 1px solid green"></div>
+
+        </div>
+
+      </div>
+      <img id="ruler" src="sprite.png">
+    </div>
+
+    <div id="footer">
+      <span>начать заново</span>
+    </div>
+  </div>
+  <script src="main.js"></script>
 </body>
 </html>
