@@ -139,12 +139,9 @@ elems.rightinput.addEventListener('input', (e) => {
   }
 })
 elems.suminput.addEventListener('input', (e) => {
-  if (e.data > 0) {
-    
-    let sum = leftNumber + rightNumber
-    console.log(`${sum} == ${elems.suminput.value}???`)
-    if (elems.suminput.value == sum) updateState('sumDone')
-  }
+  let sum = leftNumber + rightNumber
+  console.log(`${sum} == ${elems.suminput.value}???`)
+  if (elems.suminput.value == sum) updateState('sumDone')
   if (elems.suminput.value.length > 2) elems.suminput.value = ''
 })
 elems.footer.addEventListener('click', (e) => {
