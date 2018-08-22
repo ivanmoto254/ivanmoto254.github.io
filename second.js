@@ -29,8 +29,42 @@ function ses (id, obj) {
 }
 var leftNumber = 1
 var rightNumber = 1
-var leftSteps = 1
-var rightSteps = 1
+
+var svgLeft = d3.select("#leftarc").append("svg")
+var svgRight = d3.select("#rightarc").append("svg")
+var lline = svgLeft.append("path")
+var rline = svgRight.append("path")
+var lineFunction = d3.line()
+  .x(function(d, i) { return d.x })
+  .y(function(d) { return d.y })
+  .curve(d3.curveBundle)
+
+var markerLeft = svgLeft.append('defs')
+  .append('marker').attr('id', 'arrow')
+  .attr('viewBox', '0 0 30 30')
+  .attr('refX', 20)
+  .attr('refY', 5)
+  .attr('markerWidth', 10)
+  .attr('markerHeight', 20)
+  .attr('orient', 'auto')
+  .attr("stroke", "#cc6292")
+  .attr("stroke-width", 2)
+  .attr("fill", "none")
+  .append('path').attr("d", 'M 0 0 L 20 5 L 0 10')
+
+var markerRight = svgRight.append('defs')
+  .append('marker').attr('id', 'arrow')
+  .attr('viewBox', '0 0 30 30')
+  .attr('refX', 20)
+  .attr('refY', 5)
+  .attr('markerWidth', 10)
+  .attr('markerHeight', 20)
+  .attr('orient', 'auto')
+  .attr("stroke", "#cc6292")
+  .attr("stroke-width", 2)
+  .attr("fill", "none")
+  .append('path').attr("d", 'M 0 0 L 20 5 L 0 10')
+
 var state = 'initDone'
 var states = {
   initDone: {
@@ -54,11 +88,11 @@ var states = {
       elems.sumleft.innerHTML = leftNumber
       elems.sumright.innerHTML = rightNumber
       // set wrong inputs and update arcs
-      leftSteps = randomNumber(1, 9, [leftNumber])
-      rightSteps = randomNumber(1, 9, [rightNumber])
-      elems.leftinput.value = leftSteps
-      elems.rightinput.value = rightSteps
-      updateArcs(leftSteps, rightSteps)
+      // leftSteps = randomNumber(1, 9, [leftNumber])
+      // rightSteps = randomNumber(1, 9, [rightNumber])
+      elems.leftinput.value = ''
+      elems.rightinput.value = ''
+      updateArcs(leftNumber, rightNumber)
       // focus on left input
       elems.leftinput.focus()
     }
@@ -83,7 +117,7 @@ var states = {
     sumleft: {background: 'none'},
     sumright: {background: 'none'},
     sumquestion: {display: 'none'},
-    suminput: {display: 'block'},
+    suminput: {display: 'block', color: 'red'},
     leftinput: {display: 'none'},
     leftnumber: {display: 'block'},
     rightinput: {display: 'none'},
@@ -99,7 +133,7 @@ var states = {
     sumleft: {background: 'none'},
     sumright: {background: 'none'},
     sumquestion: {display: 'block', background: 'green'},
-    suminput: {display: 'none'},
+    suminput: {display: 'none', color: 'black'},
     leftinput: {display: 'none'},
     leftnumber: {display: 'block'},
     rightinput: {display: 'none'},
@@ -121,9 +155,7 @@ var states = {
 elems.leftinput.addEventListener('input', (e) => {
   if (e.data > 0) {
     elems.leftinput.value = e.data
-    leftSteps = e.data
-    updateArcs(leftSteps, rightSteps)
-    if (leftSteps == leftNumber) updateState('firstmatchDone')
+    if (e.data == leftNumber) updateState('firstmatchDone')
   } else {
     elems.leftinput.value = ''
   }
@@ -131,9 +163,7 @@ elems.leftinput.addEventListener('input', (e) => {
 elems.rightinput.addEventListener('input', (e) => {
   if (e.data > 0) {
     elems.rightinput.value = e.data
-    rightSteps = e.data
-    updateArcs(leftSteps, rightSteps)
-    if (rightSteps == rightNumber) updateState('secondmatchDone')
+    if (e.data == rightNumber) updateState('secondmatchDone')
   } else {
     elems.rightinput.value = ''
   }
@@ -144,30 +174,51 @@ elems.suminput.addEventListener('input', (e) => {
   if (elems.suminput.value == sum) updateState('sumDone')
   if (elems.suminput.value.length > 2) elems.suminput.value = ''
 })
-// elems.footer.addEventListener('click', (e) => {
-//   updateState('initDone')
-// })
 updateState('initDone')
 
 function updateArcs (l, r) {
-  ses('leftarc', {
-    height: `${21+l*5}px`,
-    borderWidth: '3px',
-    borderColor: '#cc6292 #cc6292 transparent #cc6292',
-    borderRadius: `${21+l*5}px ${21+l*5}px 0px 0px`
-  })
+  var ldata = [
+    { "x": 0,   "y": 25+l*5},
+    { "x": (l*39)/2,  "y": -10},
+    { "x": l*39+2,  "y": 25+l*5}
+  ]
+  var rdata = [
+    { "x": 0,   "y": 25+r*5},
+    { "x": (r*39)/2,  "y": -10},
+    { "x": r*39+2,  "y": 25+r*5}
+  ]
+
+  svgLeft
+    .attr("width", l*39+2)
+    .attr("height", 28+l*5)
+
+  svgRight
+    .attr("width", r*39+2)
+    .attr("height", 28+r*5)
+
+  lline
+    .attr("d", lineFunction(ldata))
+    .attr("stroke", "#cc6292")
+    .attr("stroke-width", 2)
+    .attr("fill", "none")
+
+  rline
+    .attr("d", lineFunction(rdata))
+    .attr("stroke", "#cc6292")
+    .attr("stroke-width", 2)
+    .attr("fill", "none")
+
+  svgLeft.selectAll('path')
+    .attr("marker-end", 'url(#arrow)')
+  svgRight.selectAll('path')
+    .attr("marker-end", 'url(#arrow)')
+
   ses('left', {
     position: 'absolute',
     width: `${l*39+3}px`,
     height: `${60+l*5}px`,
     left: '0px',
     bottom: '0px',
-  })
-  ses('rightarc', {
-    height: `${21+r*5}px`,
-    borderWidth: '3px',
-    borderColor: '#cc6292 #cc6292 transparent #cc6292',
-    borderRadius: `${21+l*5}px ${21+l*5}px 0px 0px`
   })
   ses('right', {
     position: 'absolute',
