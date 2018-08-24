@@ -82,9 +82,11 @@ var states = {
       console.log('initDone!')
       // ? the sum
       elems.sumquestion.innerHTML = '?'
-      // get random numbers
-      leftNumber = randomNumber(1, 9)
-      rightNumber = randomNumber(1, 9)
+      // get numbers
+      let randSum = randomNumber(11, 4)
+      console.log('randSum: ', randSum)
+      leftNumber = randomNumber(1, 9, [1,2,3,4,5])
+      rightNumber = randSum - leftNumber
       elems.sumleft.innerHTML = leftNumber
       elems.sumright.innerHTML = rightNumber
       // set wrong inputs and update arcs
